@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Behind the Machine: Drone Prompt Challenge</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        tech: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        cyberDark: '#0b0f19',
+                        cyberCard: '#131a2b',
+                        cyberBorder: '#23304d',
+                        neonBlue: '#38bdf8',
+                        neonPurple: '#a855f7',
+                        neonGreen: '#34d399',
+                        neonAmber: '#fbbf24',
+                        neonRed: '#f87171'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #f1f5f9;
+        }
+        .tech-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .grid-bg {
+            background-size: 32px 32px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #23304d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans grid-bg selection:bg-neonBlue selection:text-slate-900">
+
+    <!-- Top Header -->
+    <header class="border-b border-cyberBorder bg-cyberDark/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center font-tech font-bold text-lg shadow-lg">
+                    🛸
+                </div>
+                <div>
+                    <h1 class="tech-font text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-2">
+                        Mind Behind The Machine
+                        <span class="text-[10px] bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded-full font-mono">Drone Prompt Challenge</span>
+                    </h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 bg-cyberCard px-3 py-1 rounded-xl border border-cyberBorder text-xs text-slate-300">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="font-mono text-slate-400">Drone Status: <strong class="text-white" id="header-status">STANDBY</strong></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- Pure Mission Goal Banner -->
+        <div class="bg-gradient-to-r from-slate-900 via-cyberCard to-slate-900 border border-cyberBorder rounded-2xl p-5 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+                <div class="flex items-center gap-2">
+                    <span class="bg-cyan-500/20 text-cyan-300 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-cyan-500/30 uppercase tracking-wider">🎯 MISSION OBJECTIVE</span>
+                </div>
+                <span class="text-xs text-amber-400 font-mono font-medium flex items-center gap-1">
+                    <span>⚠️ HAZARDS:</span> Watchtower • Wind Gusts • Fragile Supplies
+                </span>
+            </div>
+            
+            <p class="text-slate-200 text-sm sm:text-base font-medium leading-relaxed">
+                "Guide the autonomous Search & Rescue Drone (<span class="text-cyan-400 font-bold font-mono">AERO-1</span>) safely through the mountain storm to deliver emergency supplies to the lost hiker."
+            </p>
+        </div>
+
+        <!-- Two Column Interactive Challenge Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left Panel: Pure Student Input & 3 Clickable Hints -->
+            <div class="lg:col-span-5 bg-cyberCard rounded-2xl p-5 border border-cyberBorder space-y-5 shadow-xl">
+                
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <span class="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <span>⌨️</span> Instructions for AERO-1 AI
+                    </span>
+                    <span id="char-count" class="text-[11px] text-slate-500 font-mono">0 characters</span>
+                </div>
+
+                <!-- Clean Blank Textarea -->
+                <div class="space-y-2">
+                    <label for="prompt-input" class="text-xs font-semibold text-slate-300 block">
+                        Type your prompt instructions below:
+                    </label>
+                    <textarea 
+                        id="prompt-input" 
+                        rows="7" 
+                        oninput="onPromptChange()" 
+                        placeholder="Write your prompt here... Tell AERO-1 what to do step by step." 
+                        class="w-full bg-slate-950 border border-slate-700 rounded-xl p-4 text-xs text-slate-100 font-mono focus:border-cyan-400 focus:outline-none transition leading-relaxed resize-none shadow-inner"
+                    ></textarea>
+                </div>
+
+                <!-- Launch Button -->
+                <button 
+                    onclick="launchDroneSimulation()" 
+                    id="btn-launch" 
+                    class="w-full bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2 text-sm tech-font"
+                >
+                    <span>🚀</span> LAUNCH DRONE & TEST PROMPT
+                </button>
+
+                <!-- 3 Explicit Clickable Hints Section -->
+                <div class="pt-2 border-t border-slate-800 space-y-2.5">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-mono">
+                        <span class="font-bold flex items-center gap-1 text-amber-400">💡 Need help? Reveal hints:</span>
+                    </div>
+
+                    <!-- Hint 1 -->
+                    <div class="border border-slate-800 rounded-xl bg-slate-950/60 overflow-hidden">
+                        <button onclick="toggleHint(1)" class="w-full text-left px-3.5 py-2.5 text-xs text-slate-300 font-medium flex items-center justify-between hover:bg-slate-900 transition">
+                            <span class="flex items-center gap-2">
+                                <span class="bg-slate-800 text-amber-400 w-5 h-5 rounded-full flex items-center justify-center font-mono text-[10px] font-bold">1</span>
+                                Hint 1: Obstacles in path
+                            </span>
+                            <span id="hint-icon-1" class="text-slate-500 text-xs">Show ➕</span>
+                        </button>
+                        <div id="hint-content-1" class="hidden px-3.5 py-3 border-t border-slate-800/80 bg-slate-900/50 text-xs text-cyan-300 font-mono leading-relaxed">
+                            💡 "Think about physical obstacles: What is directly between the drone and the hiker?"
+                        </div>
+                    </div>
+
+                    <!-- Hint 2 -->
+                    <div class="border border-slate-800 rounded-xl bg-slate-950/60 overflow-hidden">
+                        <button onclick="toggleHint(2)" class="w-full text-left px-3.5 py-2.5 text-xs text-slate-300 font-medium flex items-center justify-between hover:bg-slate-900 transition">
+                            <span class="flex items-center gap-2">
+                                <span class="bg-slate-800 text-amber-400 w-5 h-5 rounded-full flex items-center justify-center font-mono text-[10px] font-bold">2</span>
+                                Hint 2: Weather & speed
+                            </span>
+                            <span id="hint-icon-2" class="text-slate-500 text-xs">Show ➕</span>
+                        </button>
+                        <div id="hint-content-2" class="hidden px-3.5 py-3 border-t border-slate-800/80 bg-slate-900/50 text-xs text-cyan-300 font-mono leading-relaxed">
+                            💡 "Think about weather & speed: How should the drone handle high wind gusts and fragile cargo?"
+                        </div>
+                    </div>
+
+                    <!-- Hint 3 -->
+                    <div class="border border-slate-800 rounded-xl bg-slate-950/60 overflow-hidden">
+                        <button onclick="toggleHint(3)" class="w-full text-left px-3.5 py-2.5 text-xs text-slate-300 font-medium flex items-center justify-between hover:bg-slate-900 transition">
+                            <span class="flex items-center gap-2">
+                                <span class="bg-slate-800 text-amber-400 w-5 h-5 rounded-full flex items-center justify-center font-mono text-[10px] font-bold">3</span>
+                                Hint 3: Landing & safety
+                            </span>
+                            <span id="hint-icon-3" class="text-slate-500 text-xs">Show ➕</span>
+                        </button>
+                        <div id="hint-content-3" class="hidden px-3.5 py-3 border-t border-slate-800/80 bg-slate-900/50 text-xs text-cyan-300 font-mono leading-relaxed">
+                            💡 "Think about landing & safety: What should the drone do once it reaches the target coordinates?"
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Right Panel: Simulation Canvas & Outcome Feedback -->
+            <div class="lg:col-span-7 space-y-4">
+                
+                <!-- 2D Telemetry Simulation Canvas Box -->
+                <div class="bg-cyberCard rounded-2xl p-4 border border-cyberBorder shadow-xl relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-3 text-xs font-mono">
+                        <span class="text-slate-300 font-bold flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+                            AERO-1 Flight Telemetry Canvas
+                        </span>
+                        <span id="canvas-badge" class="bg-slate-800 text-slate-400 px-2.5 py-0.5 rounded-md text-[11px]">Awaiting Launch</span>
+                    </div>
+
+                    <!-- Canvas -->
+                    <div class="relative w-full h-72 sm:h-80 bg-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-inner">
+                        <canvas id="droneCanvas" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+
+                <!-- Flight Terminal Output -->
+                <div class="bg-slate-950 border border-cyberBorder rounded-2xl p-4 space-y-2 font-mono text-xs">
+                    <div class="flex items-center justify-between text-slate-400 border-b border-slate-800/80 pb-2">
+                        <span class="text-cyan-400 font-bold flex items-center gap-1.5">
+                            <span>📟</span> Execution Flight Log
+                        </span>
+                        <span id="log-time" class="text-[10px] text-slate-500">System Ready</span>
+                    </div>
+                    <p id="flight-log" class="text-slate-300 leading-relaxed min-h-[44px] flex items-center">
+                        Type instructions in the box on the left, then press "LAUNCH DRONE & TEST PROMPT" to test your prompt.
+                    </p>
+                </div>
+
+                <!-- Dynamic Feedback Dialog Card -->
+                <div id="outcome-card" class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl text-xs space-y-1.5 transition-all">
+                    <div class="font-bold text-slate-300 flex items-center gap-2 text-sm">
+                        <span>📋</span> <span id="outcome-title">Prompt Analysis Result</span>
+                    </div>
+                    <p id="outcome-desc" class="text-slate-400 leading-relaxed">
+                        The AI drone executes instructions word-for-word. Make sure your prompt covers all environmental hazards!
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // --- State Management ---
+        const state = {
+            isAnimating: false,
+            drone: {
+                x: 40,
+                y: 140,
+                status: 'standby' // 'standby', 'flying', 'crashed', 'wind_blown', 'overshot', 'success'
+            },
+            windParticles: []
+        };
+
+        // DOM Elements
+        const promptInput = document.getElementById('prompt-input');
+        const charCount = document.getElementById('char-count');
+        const headerStatus = document.getElementById('header-status');
+        const canvasBadge = document.getElementById('canvas-badge');
+        const flightLog = document.getElementById('flight-log');
+        const outcomeCard = document.getElementById('outcome-card');
+        const outcomeTitle = document.getElementById('outcome-title');
+        const outcomeDesc = document.getElementById('outcome-desc');
+
+        // Canvas Setup
+        const canvas = document.getElementById('droneCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            if (!canvas.parentElement) return;
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            initWindParticles();
+            drawScene();
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function initWindParticles() {
+            state.windParticles = [];
+            for(let i = 0; i < 20; i++) {
+                state.windParticles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    speed: 2 + Math.random() * 3,
+                    length: 15 + Math.random() * 20
+                });
+            }
+        }
+
+        // Prompt Input Handlers
+        function onPromptChange() {
+            const len = promptInput.value.length;
+            charCount.innerText = `${len} character${len === 1 ? '' : 's'}`;
+        }
+
+        // Toggle Explicit Hints
+        function toggleHint(index) {
+            const content = document.getElementById(`hint-content-${index}`);
+            const icon = document.getElementById(`hint-icon-${index}`);
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.innerText = "Hide ➖";
+            } else {
+                content.classList.add('hidden');
+                icon.innerText = "Show ➕";
+            }
+        }
+
+        // Reset Drone & Simulation Canvas
+        function resetSimulation() {
+            state.isAnimating = false;
+            state.drone.x = 40;
+            state.drone.y = canvas.height * 0.5 || 140;
+            state.drone.status = 'standby';
+
+            headerStatus.innerText = "STANDBY";
+            headerStatus.className = "text-white";
+
+            canvasBadge.innerText = "Awaiting Launch";
+            canvasBadge.className = "bg-slate-800 text-slate-400 px-2.5 py-0.5 rounded-md text-[11px]";
+
+            flightLog.innerText = "System reset. Ready to launch with new instructions.";
+            
+            outcomeCard.className = "bg-slate-900/80 border border-slate-800 p-4 rounded-xl text-xs space-y-1.5 transition-all";
+            outcomeTitle.innerText = "Prompt Analysis Result";
+            outcomeTitle.className = "text-slate-300 font-bold";
+            outcomeDesc.innerText = "The AI drone executes instructions word-for-word. Make sure your prompt covers all environmental hazards!";
+
+            drawScene();
+        }
+
+        // --- Canvas Rendering Loop ---
+        function drawScene() {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Dark Night Sky Background
+            ctx.fillStyle = "#030712";
+            ctx.fillRect(0, 0, w, h);
+
+            // Mountains background silhouette
+            ctx.fillStyle = "#0f172a";
+            ctx.beginPath();
+            ctx.moveTo(0, h);
+            ctx.lineTo(w * 0.2, h * 0.5);
+            ctx.lineTo(w * 0.4, h * 0.75);
+            ctx.lineTo(w * 0.7, h * 0.45);
+            ctx.lineTo(w, h);
+            ctx.fill();
+
+            // Draw Watchtower / Building Hazard
+            const towerX = w * 0.36;
+            const towerWidth = w * 0.1;
+            ctx.fillStyle = "#1e293b";
+            ctx.fillRect(towerX, h * 0.15, towerWidth, h * 0.85);
+            ctx.strokeStyle = "#334155";
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(towerX, h * 0.15, towerWidth, h * 0.85);
+
+            // Watchtower Light/Windows
+            ctx.fillStyle = "#f59e0b";
+            for(let wy = h * 0.22; wy < h * 0.85; wy += 24) {
+                ctx.fillRect(towerX + 6, wy, 6, 6);
+                ctx.fillRect(towerX + towerWidth - 12, wy, 6, 6);
+            }
+            ctx.font = "bold 9px Space Grotesk, sans-serif";
+            ctx.fillStyle = "#ef4444";
+            ctx.textAlign = "center";
+            ctx.fillText("WATCHTOWER", towerX + towerWidth/2, h * 0.12);
+
+            // Draw Wind Gust Region
+            const windX = w * 0.54;
+            const windW = w * 0.18;
+            ctx.fillStyle = "rgba(168, 85, 247, 0.06)";
+            ctx.fillRect(windX, 0, windW, h);
+            ctx.strokeStyle = "rgba(168, 85, 247, 0.2)";
+            ctx.strokeRect(windX, 0, windW, h);
+
+            // Animate Wind Particles
+            ctx.strokeStyle = "rgba(192, 132, 252, 0.35)";
+            ctx.lineWidth = 1;
+            state.windParticles.forEach(p => {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p.x + p.length, p.y);
+                ctx.stroke();
+
+                if (state.isAnimating) {
+                    p.x += p.speed;
+                    if (p.x > w) p.x = 0;
+                }
+            });
+            ctx.font = "bold 9px Space Grotesk, sans-serif";
+            ctx.fillStyle = "#c084fc";
+            ctx.textAlign = "center";
+            ctx.fillText("🌬️ HIGH WIND GUSTS", windX + windW/2, 18);
+
+            // Draw Target Lost Hiker
+            const hikerX = w * 0.86;
+            const hikerY = h * 0.65;
+
+            // Rescue Target Pad
+            ctx.fillStyle = "rgba(16, 185, 129, 0.15)";
+            ctx.strokeStyle = "#10b981";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(hikerX, hikerY, 22, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Hiker Icon
+            ctx.font = "18px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("🧗", hikerX, hikerY + 6);
+
+            ctx.font = "bold 10px Plus Jakarta Sans, sans-serif";
+            ctx.fillStyle = "#34d399";
+            ctx.fillText("Lost Hiker Target", hikerX, hikerY + 36);
+
+            // Draw AERO-1 Drone
+            drawDrone(state.drone.x, state.drone.y, state.drone.status);
+        }
+
+        function drawDrone(x, y, status) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            if (status === 'crashed') {
+                ctx.font = "26px sans-serif";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText("💥", 0, 0);
+            } else {
+                // Drone Body
+                ctx.fillStyle = status === 'success' ? '#34d399' : (status === 'wind_blown' ? '#f59e0b' : '#38bdf8');
+                ctx.beginPath();
+                ctx.arc(0, 0, 10, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Rotors
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(-14, -14); ctx.lineTo(14, 14);
+                ctx.moveTo(-14, 14); ctx.lineTo(14, -14);
+                ctx.stroke();
+
+                // Spinning Blades
+                ctx.fillStyle = '#f8fafc';
+                ctx.beginPath();
+                ctx.arc(-14, -14, 3.5, 0, Math.PI * 2);
+                ctx.arc(14, -14, 3.5, 0, Math.PI * 2);
+                ctx.arc(-14, 14, 3.5, 0, Math.PI * 2);
+                ctx.arc(14, 14, 3.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Medical Supply Box Cargo
+                ctx.fillStyle = '#ef4444';
+                ctx.fillRect(-5, 6, 10, 8);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(-1.5, 8, 3, 4);
+                ctx.fillRect(-3, 9.5, 6, 1);
+            }
+
+            ctx.restore();
+        }
+
+        // --- Core Prompt Parsing Logic ---
+        function launchDroneSimulation() {
+            if (state.isAnimating) return;
+
+            const text = promptInput.value.trim().toLowerCase();
+
+            if (!text) {
+                flightLog.innerText = "⚠️ Please type your instructions into the prompt box first!";
+                return;
+            }
+
+            resetSimulation();
+            state.isAnimating = true;
+
+            headerStatus.innerText = "FLYING";
+            headerStatus.className = "text-cyan-400 font-bold animate-pulse";
+
+            canvasBadge.innerText = "Executing Prompt Instructions...";
+            canvasBadge.className = "bg-cyan-950 text-cyan-300 border border-cyan-800 px-2.5 py-0.5 rounded-md text-[11px] animate-pulse";
+
+            // Parse for key human concepts typed by student
+            const hasAvoid = /(avoid|dodge|around|bypass|detour|obstacle|watchtower|building|steer away|don't hit|do not hit)/i.test(text);
+            const hasWindSpeed = /(wind|gust|slow|speed|limit|cautious|weather|hold|control|gently|storm|steady)/i.test(text);
+            const hasLandTarget = /(land|deliver|drop|hiker|target|stop|reach|safe landing|hover|coordinates)/i.test(text);
+
+            const w = canvas.width;
+            const h = canvas.height;
+
+            function animate() {
+                if (!state.isAnimating) return;
+
+                // OUTCOME 1: Missed Obstacle Avoidance -> Crashes into watchtower!
+                if (!hasAvoid) {
+                    state.drone.x += 3.2;
+                    flightLog.innerText = "🤖 AERO-1 Executing: Flying forward towards target. No obstacle rule instructed...";
+
+                    if (state.drone.x >= w * 0.36) {
+                        state.drone.status = 'crashed';
+                        state.isAnimating = false;
+                        
+                        headerStatus.innerText = "CRASHED";
+                        headerStatus.className = "text-red-400 font-bold";
+
+                        canvasBadge.innerText = "CRASHED INTO WATCHTOWER";
+                        canvasBadge.className = "bg-red-950 text-red-300 border border-red-800 px-2.5 py-0.5 rounded-md text-[11px]";
+
+                        flightLog.innerText = "💥 CRASH DETECTED! AERO-1 flew directly into the Watchtower.";
+
+                        setOutcome(
+                            "❌ Mission Failed: Crashed into Watchtower",
+                            "The AI drone followed your prompt literally, but you didn't include instructions to avoid obstacles or watchtowers! Remember: AI does not have human common sense.",
+                            "red"
+                        );
+                    }
+                }
+                // OUTCOME 2: Avoided obstacle, but missed Wind/Speed handling -> Swept away by storm!
+                else if (hasAvoid && !hasWindSpeed) {
+                    if (state.drone.x < w * 0.3) {
+                        state.drone.x += 2.5;
+                        flightLog.innerText = "🤖 AERO-1 Executing: Steering around Watchtower obstacle...";
+                    } else if (state.drone.x < w * 0.54) {
+                        state.drone.x += 2.2;
+                        state.drone.y = (h * 0.5) - Math.sin((state.drone.x - w * 0.3) * 0.03) * 45;
+                        flightLog.innerText = "🛡️ Successfully bypassed Watchtower...";
+                    } else {
+                        // Enters wind zone
+                        state.drone.x += 1;
+                        state.drone.y += 4;
+                        state.drone.status = 'wind_blown';
+                        flightLog.innerText = "💨 GUST WARNING! High wind knocking drone off course! No speed or weather rule provided...";
+
+                        if (state.drone.y >= h * 0.88) {
+                            state.isAnimating = false;
+                            state.drone.status = 'crashed';
+
+                            headerStatus.innerText = "LOST IN STORM";
+                            headerStatus.className = "text-amber-400 font-bold";
+
+                            canvasBadge.innerText = "SWEPT AWAY BY WIND GUSTS";
+                            canvasBadge.className = "bg-amber-950 text-amber-300 border border-amber-800 px-2.5 py-0.5 rounded-md text-[11px]";
+
+                            flightLog.innerText = "🌪️ LOST! Strong wind gusts knocked AERO-1 out of control and destroyed cargo.";
+
+                            setOutcome(
+                                "⚠️ Mission Failed: Blown Away by Wind",
+                                "You told AERO-1 to avoid obstacles, but forgot to give rules for handling high mountain winds or controlling speed! The drone couldn't stabilize itself.",
+                                "amber"
+                            );
+                        }
+                    }
+                }
+                // OUTCOME 3: Avoided obstacle & handled wind, BUT missed safe landing/target command -> Overshoots target!
+                else if (hasAvoid && hasWindSpeed && !hasLandTarget) {
+                    if (state.drone.x < w * 0.3) {
+                        state.drone.x += 2.2;
+                        flightLog.innerText = "🤖 AERO-1 Executing: Navigating path carefully...";
+                    } else if (state.drone.x < w * 0.54) {
+                        state.drone.x += 2.0;
+                        state.drone.y = (h * 0.5) - Math.sin((state.drone.x - w * 0.3) * 0.03) * 40;
+                        flightLog.innerText = "🛡️ Safely routing around Watchtower...";
+                    } else if (state.drone.x < w * 0.84) {
+                        state.drone.x += 2.2;
+                        state.drone.y += (h * 0.65 - state.drone.y) * 0.1;
+                        flightLog.innerText = "🌬️ Stabilizing through wind zone at controlled speed...";
+                    } else {
+                        state.drone.x += 3.0; // Keeps flying past hiker
+                        flightLog.innerText = "⚠️ OVERSHOOTING! Drone has no instruction to land or stop at target...";
+
+                        if (state.drone.x >= w + 20) {
+                            state.isAnimating = false;
+
+                            headerStatus.innerText = "OVERSHOT TARGET";
+                            headerStatus.className = "text-amber-400 font-bold";
+
+                            canvasBadge.innerText = "FLEW PAST TARGET";
+                            canvasBadge.className = "bg-amber-950 text-amber-300 border border-amber-800 px-2.5 py-0.5 rounded-md text-[11px]";
+
+                            setOutcome(
+                                "⚠️ Mission Incomplete: Overshot Hiker Target",
+                                "AERO-1 avoided buildings and handled the storm, but you forgot to tell it to stop, deliver cargo, or land at the hiker's location! It kept flying past.",
+                                "amber"
+                            );
+                        }
+                    }
+                }
+                // OUTCOME 4: Perfect Human Logic -> Full Success!
+                else {
+                    if (state.drone.x < w * 0.3) {
+                        state.drone.x += 2.2;
+                        flightLog.innerText = "🤖 AERO-1 Executing: Reading human safety protocols...";
+                    } else if (state.drone.x < w * 0.54) {
+                        state.drone.x += 2.0;
+                        state.drone.y = (h * 0.5) - Math.sin((state.drone.x - w * 0.3) * 0.03) * 40;
+                        flightLog.innerText = "🛡️ Safely avoiding Watchtower hazard...";
+                    } else if (state.drone.x < w * 0.84) {
+                        state.drone.x += 2.2;
+                        state.drone.y += (h * 0.65 - state.drone.y) * 0.1;
+                        flightLog.innerText = "🌬️ Stabilizing through wind storm at cautious speed...";
+                    } else {
+                        state.drone.x = w * 0.86;
+                        state.drone.y = h * 0.65 - 18;
+                        state.drone.status = 'success';
+                        state.isAnimating = false;
+
+                        headerStatus.innerText = "MISSION SUCCESS";
+                        headerStatus.className = "text-emerald-400 font-bold";
+
+                        canvasBadge.innerText = "SUPPLIES DELIVERED SAFELY!";
+                        canvasBadge.className = "bg-emerald-950 text-emerald-300 border border-emerald-800 px-2.5 py-0.5 rounded-md text-[11px]";
+
+                        flightLog.innerText = "🎉 SUCCESS! Supplies delivered safely to lost hiker!";
+
+                        setOutcome(
+                            "✨ Perfect Prompt Engineering!",
+                            "Outstanding job! Your prompt provided clear instructions for obstacle avoidance, weather safety, and target landing. You proved that humans are the true mind behind the machine!",
+                            "emerald"
+                        );
+                    }
+                }
+
+                drawScene();
+
+                if (state.isAnimating) {
+                    requestAnimationFrame(animate);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function setOutcome(title, desc, theme) {
+            outcomeTitle.innerText = title;
+            outcomeDesc.innerText = desc;
+
+            if (theme === 'red') {
+                outcomeCard.className = "bg-red-950/40 border border-red-500/40 p-4 rounded-xl text-xs space-y-1.5 transition-all";
+                outcomeTitle.className = "text-red-300 font-bold text-sm";
+            } else if (theme === 'amber') {
+                outcomeCard.className = "bg-amber-950/40 border border-amber-500/40 p-4 rounded-xl text-xs space-y-1.5 transition-all";
+                outcomeTitle.className = "text-amber-300 font-bold text-sm";
+            } else {
+                outcomeCard.className = "bg-emerald-950/40 border border-emerald-500/40 p-4 rounded-xl text-xs space-y-1.5 transition-all";
+                outcomeTitle.className = "text-emerald-300 font-bold text-sm";
+            }
+        }
+
+        // Initialize Canvas
+        window.onload = function() {
+            resizeCanvas();
+        };
+    </script>
+</body>
+</html>
